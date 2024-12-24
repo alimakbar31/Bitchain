@@ -17,8 +17,7 @@ const connectWalletButton = document.getElementById('connectWallet');
 
 // Inisialisasi TON Connect UI
 const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-    manifestUrl: 'https://alimakbar31.github.io/Bitchain/tonconnect-manifest.json',  // Ganti dengan URL manifest Anda
-    buttonRootId: 'ton-connect'  // ID tempat tombol UI akan muncul
+    manifestUrl: 'https://alimakbar31.github.io/Bitchain/tonconnect-manifest.json'
 });
 
 // Fungsi untuk menghubungkan wallet menggunakan TON Connect
