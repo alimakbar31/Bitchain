@@ -1,15 +1,3 @@
-// Initialize Telegram Web App
-// const tg = window.Telegram.WebApp;
-
-// // Handling click on the 'Join Airdrop' button
-// document.getElementById('startAirdrop').addEventListener('click', () => {
-//     // Send data to Telegram bot (could be used for backend processing)
-//     tg.sendData("airdrop_joined");
-
-//     // Close Web App and return to Telegram
-//     tg.close();
-// });
-
 // Select all menu items
 const menuItems = document.querySelectorAll('.menu-item');
 
@@ -23,3 +11,44 @@ menuItems.forEach(item => {
         item.classList.add('active');
     });
 });
+
+// Seleksi tombol Connect Wallet
+const connectWalletButton = document.getElementById('connectWallet');
+
+// Fungsi untuk menghubungkan wallet
+async function connectWallet() {
+    try {
+        // Inisialisasi TON Client
+        const client = new TonClient({
+            network: {
+                server_address: "https://main.ton.dev"
+            }
+        });
+
+        // Periksa apakah wallet sudah terhubung
+        const wallet = await client.wallets.get("ton_connect");
+
+        // Menyambungkan ke wallet pengguna
+        const result = await wallet.connect();
+
+        if (result.success) {
+            alert("Wallet berhasil terhubung!");
+            console.log("Wallet Address:", result.walletAddress);
+            // Anda bisa menyimpan address atau melakukan hal lain setelah wallet terhubung
+        } else {
+            alert("Gagal terhubung ke wallet.");
+        }
+
+        client.close();
+    } catch (error) {
+        console.error("Error connecting wallet:", error);
+        alert("Terjadi kesalahan saat mencoba menghubungkan wallet.");
+    }
+}
+
+// Event listener untuk tombol Connect Wallet
+connectWalletButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    connectWallet();
+});
+
