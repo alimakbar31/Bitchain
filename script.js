@@ -12,37 +12,36 @@ menuItems.forEach(item => {
     });
 });
 
-// Seleksi tombol Connect Wallet
+// Pilih tombol Connect Wallet
 const connectWalletButton = document.getElementById('connectWallet');
 
-// Fungsi untuk menghubungkan wallet
+// Fungsi untuk menghubungkan wallet menggunakan TON Connect
 async function connectWallet() {
     try {
-        // Inisialisasi TON Client
-        const client = new TonClient({
-            network: {
-                server_address: "https://main.ton.dev"
-            }
-        });
+        // Inisialisasi TON Connect Client
+        const tonConnect = new TonConnect();
 
-        // Periksa apakah wallet sudah terhubung
-        const wallet = await client.wallets.get("ton_connect");
+        // Mulai koneksi dan buka pilihan wallet
+        const connection = await tonConnect.connect();
 
-        // Menyambungkan ke wallet pengguna
-        const result = await wallet.connect();
+        // Jika koneksi berhasil, tampilkan wallet address
+        if (connection) {
+            const { walletAddress } = connection;  // Ambil wallet address dari connection
 
-        if (result.success) {
-            alert("Wallet berhasil terhubung!");
-            console.log("Wallet Address:", result.walletAddress);
-            // Anda bisa menyimpan address atau melakukan hal lain setelah wallet terhubung
-        } else {
-            alert("Gagal terhubung ke wallet.");
+            // Ubah teks tombol menjadi alamat wallet
+            const walletElement = connectWalletButton.querySelector('span');
+            walletElement.textContent = walletAddress;  // Ganti teks span dengan wallet address
+
+            // Anda juga bisa menyembunyikan icon atau menambahkan styling jika diperlukan
+            const iconElement = connectWalletButton.querySelector('i');
+            iconElement.style.display = 'none';  // Sembunyikan icon jika sudah terhubung
+
+            // Opsional: Menambahkan log atau lainnya
+            console.log("Wallet Address:", walletAddress);
         }
-
-        client.close();
     } catch (error) {
-        console.error("Error connecting wallet:", error);
-        alert("Terjadi kesalahan saat mencoba menghubungkan wallet.");
+        console.error("Gagal terhubung ke wallet:", error);
+        alert("Terjadi kesalahan saat menghubungkan wallet.");
     }
 }
 
