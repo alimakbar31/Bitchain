@@ -15,30 +15,31 @@ menuItems.forEach(item => {
 // Pilih tombol Connect Wallet
 const connectWalletButton = document.getElementById('connectWallet');
 
+// Inisialisasi TON Connect UI
+const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+    manifestUrl: 'https://alimakbar31.github.io/Bitchain/tonconnect-manifest.json',  // Ganti dengan URL manifest Anda
+    buttonRootId: 'ton-connect'  // ID tempat tombol UI akan muncul
+});
+
 // Fungsi untuk menghubungkan wallet menggunakan TON Connect
 async function connectWallet() {
     try {
-        // Inisialisasi TON Connect Client
-        const tonConnect = new TonConnect();
+        const connectedWallet = await tonConnectUI.connectWallet();  // Menghubungkan wallet
+        console.log("Wallet connected:", connectedWallet);
 
-        // Mulai koneksi dan buka pilihan wallet
-        const connection = await tonConnect.connect();
-
-        // Jika koneksi berhasil, tampilkan wallet address
-        if (connection) {
-            const { walletAddress } = connection;  // Ambil wallet address dari connection
+        if (connectedWallet) {
+            // Ambil alamat wallet yang terhubung
+            const walletAddress = connectedWallet.walletAddress;
 
             // Ubah teks tombol menjadi alamat wallet
             const walletElement = connectWalletButton.querySelector('span');
             walletElement.textContent = walletAddress;  // Ganti teks span dengan wallet address
 
-            // Anda juga bisa menyembunyikan icon atau menambahkan styling jika diperlukan
+            // Sembunyikan ikon setelah terhubung
             const iconElement = connectWalletButton.querySelector('i');
             iconElement.style.display = 'none';  // Sembunyikan icon jika sudah terhubung
-
-            // Opsional: Menambahkan log atau lainnya
-            console.log("Wallet Address:", walletAddress);
         }
+
     } catch (error) {
         console.error("Gagal terhubung ke wallet:", error);
         alert("Terjadi kesalahan saat menghubungkan wallet.");
@@ -47,7 +48,6 @@ async function connectWallet() {
 
 // Event listener untuk tombol Connect Wallet
 connectWalletButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    connectWallet();
+    e.preventDefault();  // Mencegah aksi default
+    connectWallet();  // Menjalankan fungsi connectWallet
 });
-
