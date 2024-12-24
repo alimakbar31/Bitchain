@@ -1,19 +1,8 @@
-// Select all menu items
-const menuItems = document.querySelectorAll('.menu-item');
-
-// Add click event to each menu item
-menuItems.forEach(item => {
-    item.addEventListener('click', () => {
-        // Remove active class from all menu items
-        menuItems.forEach(menu => menu.classList.remove('active'));
-
-        // Add active class to clicked menu item
-        item.classList.add('active');
-    });
-});
-
 // Pilih tombol Connect Wallet
 const connectWalletButton = document.getElementById('connectWallet');
+
+// Pilih span dengan id tonAddress
+const tonAddressElement = document.getElementById('tonAddress');
 
 // Inisialisasi TON Connect UI
 const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
@@ -27,16 +16,18 @@ async function connectWallet() {
         console.log("Wallet connected:", connectedWallet);
 
         if (connectedWallet) {
-            // Ambil alamat wallet yang terhubung
-            const walletAddress = connectedWallet.walletAddress;
+            // Ambil alamat wallet yang terhubung dari hasil connectWallet
+            const walletAddress = connectedWallet.account.address;
 
-            // Ubah teks tombol menjadi alamat wallet
-            const walletElement = connectWalletButton.querySelector('span');
-            walletElement.textContent = walletAddress;  // Ganti teks span dengan wallet address
+            // Ganti teks di elemen dengan id tonAddress dengan alamat wallet
+            tonAddressElement.textContent = walletAddress;  // Ganti teks span dengan wallet address
 
             // Sembunyikan ikon setelah terhubung
             const iconElement = connectWalletButton.querySelector('i');
-            iconElement.style.display = 'none';  // Sembunyikan icon jika sudah terhubung
+            iconElement.style.display = 'none';  // Sembunyikan icon jika wallet sudah terhubung
+
+            // Opsional: Menyimpan alamat wallet ke localStorage atau sessionStorage untuk penggunaan selanjutnya
+            localStorage.setItem('walletAddress', walletAddress); // Menyimpan alamat wallet di browser
         }
 
     } catch (error) {
